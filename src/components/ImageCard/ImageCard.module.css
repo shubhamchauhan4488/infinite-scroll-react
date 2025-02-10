@@ -1,0 +1,16 @@
+.card {
+  cursor: pointer;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  border-radius: 1rem;
+  box-shadow: 0 0 0.625rem rgb(126, 126, 126);
+}
+
+.card > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1rem;
+}

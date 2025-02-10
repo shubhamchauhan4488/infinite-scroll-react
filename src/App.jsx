@@ -3,6 +3,7 @@ import { fetchImages } from './services/unsplashService';
 import useInfiniteScroll from './hooks/useInfiniteScroll';
 import SearchBar from './components/SearchBar/SearchBar';
 import Layout from './components/Layout/Layout';
+import ImageGrid from './components/ImageGrid/ImageGrid';
 
 const App = () => {
   const [query, setQuery] = useState('');
@@ -52,15 +53,7 @@ const App = () => {
   return (
     <Layout>
      <SearchBar onSearch={onSearchClick} />
-      {images.length > 0 &&
-        images.map((image, index) => (
-          <div key={index} ref={index === images.length - 1 ? lastElementRef : null}>
-            <img
-              src={image.urls.small}
-              alt={image.alt_description || 'Unsplash Image'}
-            />
-          </div>
-        ))}
+     <ImageGrid images={images} loading={loading} lastElementRef={lastElementRef} />
       {loading && <>Loading...</>}
     </Layout>
   );
