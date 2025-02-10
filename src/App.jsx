@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchImages } from './services/unsplashService';
+import useInfiniteScroll from './hooks/useInfiniteScroll';
 
 const App = () => {
   const [query, setQuery] = useState('');
@@ -7,12 +8,18 @@ const App = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [hasMore, setHasMore] = useState(true);
 
   const loadImages = async () => {
     setLoading(true);
     try {
-      const { data } = await fetchImages({ query, page });
-
+      const { data, total_pages } = await fetchImages({ query, page });
+      // Determine if more images are available.
+      if (query) {
+        setHasMore(page < total_pages);
+      } else {
+        setHasMore(data.length > 0);
+      }
       setImages((prevImages) => (page === 1 ? data : [...prevImages, ...data]));
     } catch (error) {
       console.error('Error fetching images:', error);
@@ -35,7 +42,12 @@ const App = () => {
     setHasMore(true);
   };
 
-  const nextHandler = () => { setPage(page + 1); };
+  const lastElementRef = useInfiniteScroll(loading, hasMore, () => {
+    setPage((prevPage) => {
+      console.log('useInfiniteScroll: prevPage', prevPage);
+      return prevPage + 1;
+    })
+  });
 
   return (
     <>
@@ -52,14 +64,13 @@ const App = () => {
       </div>
       {images.length > 0 &&
         images.map((image, index) => (
-          <div key={index}>
+          <div key={index} ref={index === images.length - 1 ? lastElementRef : null}>
             <img
               src={image.urls.small}
               alt={image.alt_description || 'Unsplash Image'}
             />
           </div>
         ))}
-      <button onClick={nextHandler}>Next</button>
       {loading && <>Loading...</>}
     </>
   );

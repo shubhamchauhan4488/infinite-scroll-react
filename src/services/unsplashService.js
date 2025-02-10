@@ -13,5 +13,5 @@ export const fetchImages = async ({ query, page = 1, perPage = 16 }) => {
   }
 
   const data = await response.json();
-  return { data: data.results ? data.results : data };
+  return  {data: data.results ? data.results : data, total_pages: data?.total_pages || 0};
 };
