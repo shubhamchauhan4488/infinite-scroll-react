@@ -1,7 +1,7 @@
 import React from 'react';
 import ImageCard from '../ImageCard/ImageCard';
 import styles from './ImageGrid.module.css';
-import { CardSkeleton } from '../shared/CardSkeleton/CardSkeleton';
+import CardSkeleton from '../shared/CardSkeleton/CardSkeleton';
 
 const ImageGrid = React.memo(({ images, lastElementRef, loading }) => {
   return (

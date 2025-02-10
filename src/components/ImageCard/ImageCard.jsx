@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Modal from '../Modal/Modal';
 import styles from './ImageCard.module.css';
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
+import Image from '../shared/Image/Image';
+import CardSkeleton from '../shared/CardSkeleton/CardSkeleton';
 
 const ImageCard = React.memo(({ image, ref }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,23 +16,23 @@ const ImageCard = React.memo(({ image, ref }) => {
   };
 
   return (
-    <div className={styles.card} ref={ref} onClick={handleOpenModal}>
-      {/* Skeleton overlay for smooth transition */}
-      {isLoading && <Skeleton highlightColor='#7e7e7e' height="100%" width='100%'/>}
-      
-      {/* Image is always rendered but hidden until loaded */}
-      <img
-        loading="lazy"
-        src={image.urls.small}
-        alt={image.alt_description || 'Unsplash Image'}
-        className={styles.image}
-        onLoad={() => setIsLoading(false)} // Hide skeleton once loaded
-      />
+    <>
+      {isLoading && <CardSkeleton />}
+      <div className={styles.card} ref={ref} onClick={handleOpenModal}>
 
-      {isModalOpen && (
-        <Modal onClose={handleCloseModal} image={image} />
-      )}
-       </div> 
+        <Image
+          loading="lazy"
+          src={image.urls.small}
+          alt={image.alt_description || 'Unsplash Image'}
+          className={styles.image}
+          onLoad={() => setIsLoading(false)} // Hide skeleton once loaded
+        />
+
+        {isModalOpen && (
+          <Modal onClose={handleCloseModal} image={image} />
+        )}
+      </div>
+    </>
   );
 });
 
