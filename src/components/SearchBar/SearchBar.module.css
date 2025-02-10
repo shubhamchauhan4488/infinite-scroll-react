@@ -1,0 +1,34 @@
+.searchBar {
+  display: flex;
+  align-items: center;
+  background-color: #f1f1f1;
+  border-radius: 25px;
+}
+
+.searchInput {
+  flex: 1;
+  background: transparent;
+  font-size: 16px;
+  color: #4fa94d;
+  padding: 5px 10px;
+}
+
+.searchButton {
+  background-color: #4fa94d;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.searchButton:focus {
+  outline: none;
+}
+
+.searchInput:focus {
+  outline: none;
+}
+
+.searchButton:hover {
+  background-color: #9ec69d;
+}

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { fetchImages } from './services/unsplashService';
 import useInfiniteScroll from './hooks/useInfiniteScroll';
+import SearchBar from './components/SearchBar/SearchBar';
+import Layout from './components/Layout/Layout';
 
 const App = () => {
   const [query, setQuery] = useState('');
   const [images, setImages] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
   const [hasMore, setHasMore] = useState(true);
 
   const loadImages = async () => {
@@ -35,7 +36,6 @@ const App = () => {
 
   const onSearchClick = (e) => {
     e.preventDefault();
-    onSearch(searchTerm);
     setQuery(searchTerm);
     setPage(1);
     setImages([]);
@@ -50,18 +50,8 @@ const App = () => {
   });
 
   return (
-    <>
-      <div>
-        <input
-          type="text"
-          placeholder="Search images..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button type="submit" onClick={onSearchClick}>
-          Search
-        </button>
-      </div>
+    <Layout>
+     <SearchBar onSearch={onSearchClick} />
       {images.length > 0 &&
         images.map((image, index) => (
           <div key={index} ref={index === images.length - 1 ? lastElementRef : null}>
@@ -72,7 +62,7 @@ const App = () => {
           </div>
         ))}
       {loading && <>Loading...</>}
-    </>
+    </Layout>
   );
 };
 
