@@ -1,35 +1,68 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import { fetchImages } from './services/unsplashService';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [query, setQuery] = useState('');
+  const [images, setImages] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const loadImages = async () => {
+    setLoading(true);
+    try {
+      const { data } = await fetchImages({ query, page });
+
+      setImages((prevImages) => (page === 1 ? data : [...prevImages, ...data]));
+    } catch (error) {
+      console.error('Error fetching images:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load images when the query or page changes.
+  useEffect(() => {
+    loadImages();
+  }, [query, page]);
+
+  const onSearchClick = (e) => {
+    e.preventDefault();
+    onSearch(searchTerm);
+    setQuery(searchTerm);
+    setPage(1);
+    setImages([]);
+    setHasMore(true);
+  };
+
+  const nextHandler = () => { setPage(page + 1); };
 
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <input
+          type="text"
+          placeholder="Search images..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button type="submit" onClick={onSearchClick}>
+          Search
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {images.length > 0 &&
+        images.map((image, index) => (
+          <div key={index}>
+            <img
+              src={image.urls.small}
+              alt={image.alt_description || 'Unsplash Image'}
+            />
+          </div>
+        ))}
+      <button onClick={nextHandler}>Next</button>
+      {loading && <>Loading...</>}
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
