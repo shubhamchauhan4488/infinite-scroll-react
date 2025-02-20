@@ -47,7 +47,7 @@ const App = () => {
   // Attach a ref to the last element using our custom infinite scroll hook.
   const lastElementRef = useInfiniteScroll(loading, hasMore, () => {
     setPage((prevPage) => {
-      console.log('useInfiniteScroll: prevPage', prevPage);
+      // console.log('useInfiniteScroll: prevPage', prevPage);
       return prevPage + 1;
     })
   });
